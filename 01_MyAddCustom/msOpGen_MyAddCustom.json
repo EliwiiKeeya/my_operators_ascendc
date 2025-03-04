@@ -1,0 +1,49 @@
+[
+    {
+        "op": "MyAddCustom",
+        "input_desc": [
+            {
+                "name": "a",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "fp32"
+                ]
+            },
+            {
+                "name": "b",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "fp32"
+                ]
+            },
+            {
+                "name": "c",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "fp32"
+                ]
+            }
+        ],
+        "output_desc": [
+            {
+                "name": "o",
+                "param_type": "required",
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "fp32"
+                ]
+            }
+        ]
+    }
+]
