@@ -2,7 +2,7 @@
  * File				: my_add_custom.cpp
  * Date				: 2025-03-04 23:19:29
  * Author			: Eliwii_Keeya
- * Description		: MyMyAddCustom host侧源文件
+ * Description		: MyAddCustom host侧源文件
  * Last Modified	: 2025-03-04 23:19:29
  ****************************************************************************************************/
 #include "my_add_custom_tiling.h"

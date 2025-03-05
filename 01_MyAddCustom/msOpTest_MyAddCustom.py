@@ -36,11 +36,10 @@ class MyAddCustomNet(Cell):
 mindspore.set_context(jit_config={"jit_level": "O0"})
 mindspore.set_device("Ascend")
 
-a = ops.ones([8, 2048], mindspore.float32)
-b = ops.ones([8, 2048], mindspore.float32)
-c = ops.ones([8, 2048], mindspore.float32)
+a = ops.ones([2048], mindspore.float32)
+b = ops.ones([2048], mindspore.float32)
+c = ops.ones([2048], mindspore.float32)
 
-# 通过lambda实现infer shape函数
 net = MyAddCustomNet("MyAddCustom", MyAddCustomNet.infer_shape)
 
 print(net(a, b, c))

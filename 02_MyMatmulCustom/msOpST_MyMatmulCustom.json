@@ -1,0 +1,77 @@
+[
+    {
+        "case_name": "Test_MyMatmulCustom_default", 
+        "op": "MyMatmulCustom", 
+        "input_desc": [ 
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float16"
+                ],
+                "shape": [1024, 256],
+                "data_distribute": [ 
+                    "uniform"
+                ],
+                "value_range": [ 
+                    [
+                        0.1,
+                        1.0
+                    ]
+                ],
+                "name": "a"
+            },
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float16"
+                ],
+                "shape": [256, 640],
+                "data_distribute": [
+                    "uniform"
+                ],
+                "value_range": [
+                    [
+                        0.1,
+                        1.0
+                    ]
+                ],
+                "name": "b"
+            },
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float"
+                ],
+                "shape": [640],
+                "data_distribute": [
+                    "uniform"
+                ],
+                "value_range": [
+                    [
+                        0.1,
+                        1.0
+                    ]
+                ],
+                "name": "bias"
+            }
+        ],
+        "output_desc": [
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float"
+                ],
+                "shape": [1024, 640],
+                "name": "c"
+            }
+        ]
+    }
+]
