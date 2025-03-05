@@ -56,20 +56,20 @@ class MyAddCustom : public OpDef
   {
     this->Input("a")
         .ParamType(REQUIRED)
-        .DataType({ge::DT_FLOAT16})
-        .Format({ge::FORMAT_ND});
+        .DataType({ge::DT_FLOAT, ge::DT_FLOAT16})
+        .Format({ge::FORMAT_ND, ge::FORMAT_ND});
     this->Input("b")
         .ParamType(REQUIRED)
-        .DataType({ge::DT_FLOAT16})
-        .Format({ge::FORMAT_ND});
+        .DataType({ge::DT_FLOAT, ge::DT_FLOAT16})
+        .Format({ge::FORMAT_ND, ge::FORMAT_ND});
     this->Input("c")
         .ParamType(REQUIRED)
-        .DataType({ge::DT_FLOAT16})
-        .Format({ge::FORMAT_ND});
+        .DataType({ge::DT_FLOAT, ge::DT_FLOAT16})
+        .Format({ge::FORMAT_ND, ge::FORMAT_ND});
     this->Output("o")
         .ParamType(REQUIRED)
-        .DataType({ge::DT_FLOAT16})
-        .Format({ge::FORMAT_ND});
+        .DataType({ge::DT_FLOAT, ge::DT_FLOAT16})
+        .Format({ge::FORMAT_ND, ge::FORMAT_ND});
 
     this->SetInferShape(ge::InferShape).SetInferDataType(ge::InferDataType);
     this->AICore().SetTiling(optiling::TilingFunc).AddConfig("ascend910b");

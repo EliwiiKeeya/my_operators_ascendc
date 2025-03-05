@@ -26,7 +26,7 @@ public:
         pipe.InitBuffer(inQueueB, BUFFER_NUM, this->tileLength * sizeof(DTYPE_B));
         pipe.InitBuffer(inQueueC, BUFFER_NUM, this->tileLength * sizeof(DTYPE_C));
         pipe.InitBuffer(outQueueO, BUFFER_NUM, this->tileLength * sizeof(DTYPE_O));
-        pipe.InitBuffer(tmpBuffer, this->tileLength * sizeof(half));
+        pipe.InitBuffer(tmpBuffer, this->tileLength * sizeof(DTYPE_O));
     }
     __aicore__ inline void Process()
     {
@@ -44,7 +44,7 @@ private:
         AscendC::LocalTensor<DTYPE_A> aLocal = inQueueA.AllocTensor<DTYPE_A>();
         AscendC::LocalTensor<DTYPE_B> bLocal = inQueueB.AllocTensor<DTYPE_B>();
         AscendC::LocalTensor<DTYPE_C> cLocal = inQueueC.AllocTensor<DTYPE_C>();
-        AscendC::LocalTensor<half> tmpBufferLocal = tmpBuffer.AllocTensor<half>();
+        AscendC::LocalTensor<DTYPE_O> tmpBufferLocal = tmpBuffer.AllocTensor<DTYPE_O>();
 
         AscendC::DataCopy(aLocal, aGm[progress * this->tileLength], this->tileLength);
         AscendC::DataCopy(bLocal, bGm[progress * this->tileLength], this->tileLength);
@@ -61,7 +61,7 @@ private:
         AscendC::LocalTensor<DTYPE_C> cLocal = inQueueC.DeQue<DTYPE_C>();
         AscendC::LocalTensor<DTYPE_O> oLocal = outQueueO.AllocTensor<DTYPE_O>();
 
-        AscendC::LocalTensor<half> tmpTensorLocal = tmpBuffer.Get<half>();
+        AscendC::LocalTensor<DTYPE_O> tmpTensorLocal = tmpBuffer.Get<DTYPE_O>();
         
         AscendC::Add(aLocal, bLocal, tmpTensorLocal, this->tileLength);
         AscendC::Add(cLocal, tmpTensorLocal, oLocal, this->tileLength);
@@ -95,18 +95,18 @@ private:
  
 extern "C" __global__ __aicore__ void my_add_custom(GM_ADDR a, GM_ADDR b, GM_ADDR c, GM_ADDR o, GM_ADDR workspace, GM_ADDR tiling)
  {
-     GET_TILING_DATA(tiling_data, tiling);
-     KernelMyAdd op;
+    GET_TILING_DATA(tiling_data, tiling);
+    KernelMyAdd op;
     op.Init(a, b, c, o, tiling_data.totalLength, tiling_data.tileNum);
-     op.Process();
+    op.Process();
  }
  
  #ifndef ASCENDC_CPU_DEBUG
  // call of kernel function
 void my_add_custom_do(uint32_t blockDim, void *l2ctrl, void *stream, uint8_t *a, uint8_t *b, uint8_t *c,
                    uint8_t *o,  GM_ADDR workspace, uint8_t *tiling)
- {
-    my_add_custom<<<blockDim, l2ctrl, stream>>>(a, b, c, o, tiling);
- }
- #endif
+{
+my_add_custom<<<blockDim, l2ctrl, stream>>>(a, b, c, o, tiling);
+}
+#endif
  

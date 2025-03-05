@@ -1,6 +1,6 @@
 [
     {
-        "case_name": "Test_MyAddCustom_Default", 
+        "case_name": "Test_MyAddCustom_float32", 
         "op": "MyAddCustom", 
         "input_desc": [ 
             {
@@ -68,6 +68,81 @@
                 ],
                 "type": [
                     "float32"
+                ],
+                "shape": [8,2048],
+                "name": "o"
+            }
+        ]
+    },
+    {
+        "case_name": "Test_MyAddCustom_float16", 
+        "op": "MyAddCustom", 
+        "input_desc": [ 
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float16"
+                ],
+                "shape": [8,2048],
+                "data_distribute": [ 
+                    "uniform"
+                ],
+                "value_range": [ 
+                    [
+                        0.1,
+                        1.0
+                    ]
+                ],
+                "name": "a"
+            },
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float16"
+                ],
+                "shape": [8,2048],
+                "data_distribute": [
+                    "uniform"
+                ],
+                "value_range": [
+                    [
+                        0.1,
+                        1.0
+                    ]
+                ],
+                "name": "b"
+            },
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float16"
+                ],
+                "shape": [8,2048],
+                "data_distribute": [
+                    "uniform"
+                ],
+                "value_range": [
+                    [
+                        0.1,
+                        1.0
+                    ]
+                ],
+                "name": "c"
+            }
+        ],
+        "output_desc": [
+            {
+                "format": [
+                    "ND"
+                ],
+                "type": [
+                    "float16"
                 ],
                 "shape": [8,2048],
                 "name": "o"
