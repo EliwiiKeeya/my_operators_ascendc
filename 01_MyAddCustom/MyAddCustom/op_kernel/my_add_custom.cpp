@@ -6,7 +6,7 @@
  * Last Modified	: 2025-03-04 23:21:39
  ****************************************************************************************************/
  #include "kernel_operator.h"
- constexpr int32_t BUFFER_NUM = 4; // tensor num for each queue
+ constexpr int32_t BUFFER_NUM = 2; // tensor num for each queue
  
 class KernelMyAdd {
 public:
@@ -63,8 +63,8 @@ private:
 
         AscendC::LocalTensor<DTYPE_O> tmpTensorLocal = tmpBuffer.Get<DTYPE_O>();
         
-        AscendC::Add(aLocal, bLocal, tmpTensorLocal, this->tileLength);
-        AscendC::Add(cLocal, tmpTensorLocal, oLocal, this->tileLength);
+        AscendC::Add(tmpTensorLocal, aLocal, bLocal, this->tileLength);
+        AscendC::Add(oLocal, tmpTensorLocal, cLocal, this->tileLength);
         
         outQueueO.EnQue<DTYPE_O>(oLocal);
         inQueueA.FreeTensor(aLocal);
