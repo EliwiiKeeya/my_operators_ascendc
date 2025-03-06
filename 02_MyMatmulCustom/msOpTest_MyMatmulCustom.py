@@ -4,16 +4,15 @@ from mindspore.nn import Cell
 from mindspore.ops import DataType, CustomRegOp
 
 
-class MyAddCustomNet(Cell):
+class MyMatmulCustomNet(Cell):
     def __init__(self, func, out_shape):
-        super(MyAddCustomNet, self).__init__()
-        reg_info = CustomRegOp("MyAddCustom") \
+        super(MyMatmulCustomNet, self).__init__()
+        reg_info = CustomRegOp("MyMatmulCustom") \
             .input(0, "a", "required") \
             .input(1, "b", "required") \
-            .input(2, "c", "required") \
-            .output(0, "o", "required") \
-            .dtype_format(DataType.F16_Default, DataType.F16_Default, DataType.F16_Default, DataType.F16_Default) \
-            .dtype_format(DataType.F32_Default, DataType.F32_Default, DataType.F32_Default, DataType.F32_Default) \
+            .input(2, "bias", "required") \
+            .output(0, "c", "required") \
+            .dtype_format(DataType.F16_Default, DataType.F16_Default, DataType.F32_Default, DataType.F32_Default) \
             .target("Ascend") \
             .get_op_info()
 
@@ -26,20 +25,20 @@ class MyAddCustomNet(Cell):
 
     @staticmethod
     def infer_dtype(arg0, arg1, arg2):
-        return arg0
+        return arg2
 
     @staticmethod
     def infer_shape(arg0, arg1, arg2):
-        return arg0
+        return (arg0[0], arg1[1])
 
 
 mindspore.set_context(jit_config={"jit_level": "O0"})
 mindspore.set_device("Ascend")
 
-a = ops.ones([2048], mindspore.float32)
-b = ops.ones([2048], mindspore.float32)
-c = ops.ones([2048], mindspore.float32)
+a = ops.ones([1024, 256], mindspore.float16)
+b = ops.ones([256, 640], mindspore.float16)
+c = ops.ones([640], mindspore.float32)
 
-net = MyAddCustomNet("MyMatmulCustom", MyAddCustomNet.infer_shape)
+net = MyMatmulCustomNet("MyMatmulCustom", MyMatmulCustomNet.infer_shape)
 
 print(net(a, b, c))
