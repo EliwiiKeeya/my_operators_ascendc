@@ -15,9 +15,9 @@ __aicore__ inline uint32_t Ceiling(uint32_t a, uint32_t b)
     return (a + b - 1) / b;
 }
 
-template <typename aType, typename bType, typename cType> class MatmulKernel {
+template <typename aType, typename bType, typename cType> class KernelMyMatmul {
 public:
-    __aicore__ inline MatmulKernel(){};
+    __aicore__ inline KernelMyMatmul(){};
     __aicore__ inline void Init(GM_ADDR a, GM_ADDR b, GM_ADDR c, GM_ADDR workspace,
                                 uint64_t memSize, const TCubeTiling &tiling);
     template <bool setTmpSpace = false> __aicore__ inline void Process(AscendC::TPipe *pipe);
@@ -48,8 +48,8 @@ public:
 * @retval None
 */
 template <typename aType, typename bType, typename cType>
-__aicore__ inline void MatmulKernel<aType, bType, cType>::Init(GM_ADDR a, GM_ADDR b, GM_ADDR c,
-                                                                        GM_ADDR workspace, uint64_t memSize, const TCubeTiling &tiling)
+__aicore__ inline void KernelMyMatmul<aType, bType, cType>::Init(GM_ADDR a, GM_ADDR b, GM_ADDR c,
+                                                               GM_ADDR workspace, uint64_t memSize, const TCubeTiling &tiling)
 {
     this->tiling = tiling;
     this->localMemSize = memSize;
@@ -76,7 +76,7 @@ __aicore__ inline void MatmulKernel<aType, bType, cType>::Init(GM_ADDR a, GM_ADD
 */
 template <typename aType, typename bType, typename cType>
 template <bool setTmpSpace>
-__aicore__ inline void MatmulKernel<aType, bType, cType>::Process(AscendC::TPipe *pipe)
+__aicore__ inline void KernelMyMatmul<aType, bType, cType>::Process(AscendC::TPipe *pipe)
 {
     if (GetBlockIdx() >= 1) {
         return;
@@ -107,7 +107,7 @@ __aicore__ inline void MatmulKernel<aType, bType, cType>::Process(AscendC::TPipe
 */
 template <typename aType, typename bType, typename cType>
 __aicore__ inline void
-MatmulKernel<aType, bType, cType>::CalcOffset(int32_t blockIdx, const TCubeTiling &tiling, int32_t &offsetA,
+KernelMyMatmul<aType, bType, cType>::CalcOffset(int32_t blockIdx, const TCubeTiling &tiling, int32_t &offsetA,
                                                         int32_t &offsetB, int32_t &offsetC)
 {
     auto mSingleBlocks = Ceiling(tiling.M, tiling.singleCoreM);
@@ -132,13 +132,13 @@ extern "C" __global__ __aicore__ void my_matmul_custom(GM_ADDR a, GM_ADDR b, GM_
                                                     GM_ADDR tiling)
 {
     GET_TILING_DATA(tilingData, tiling);
-    MatmulKernel<half, half, float> matmulKernel;
+    KernelMyMatmul<half, half, float> op;
     AscendC::TPipe pipe;
-    REGIST_MATMUL_OBJ(&pipe, GetSysWorkSpacePtr(), matmulKernel.matmulObj, &tilingData.cubeTilingData); // Initialize the matmul object.
-    matmulKernel.Init(a, b, c, workspace, tilingData.localMemSize, tilingData.cubeTilingData);
+    REGIST_MATMUL_OBJ(&pipe, GetSysWorkSpacePtr(), op.matmulObj, &tilingData.cubeTilingData); // Initialize the matmul object.
+    op.Init(a, b, c, workspace, tilingData.localMemSize, tilingData.cubeTilingData);
     if (TILING_KEY_IS(1)) {
-        matmulKernel.Process(&pipe);
+        op.Process(&pipe);
     } else if (TILING_KEY_IS(2)) {
-        matmulKernel.Process<true>(&pipe);
+        op.Process<true>(&pipe);
     }
 }
