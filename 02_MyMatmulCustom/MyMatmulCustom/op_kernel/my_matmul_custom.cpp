@@ -24,10 +24,12 @@ public:
 
     __aicore__ inline void CalcOffset(int32_t blockIdx, const TCubeTiling &tiling, int32_t &offsetA, int32_t &offsetB,
                                     int32_t &offsetC);
+    
+    using MatmulTypeA = MatmulType<AscendC::TPosition::GM, CubeFormat::ND, aType>;
+    using MatmulTypeB = MatmulType<AscendC::TPosition::GM, CubeFormat::ND, bType>;
+    using MatmulTypeC = MatmulType<AscendC::TPosition::GM, CubeFormat::ND, cType>;
 
-    Matmul<MatmulType<AscendC::TPosition::GM, CubeFormat::ND, aType>, MatmulType<AscendC::TPosition::GM, CubeFormat::ND, bType>,
-        MatmulType<AscendC::TPosition::GM, CubeFormat::ND, cType>>
-        matmulObj;
+    Matmul<MatmulTypeA, MatmulTypeB, MatmulTypeC> matmulObj;
 
     AscendC::GlobalTensor<aType> aGlobal;
     AscendC::GlobalTensor<bType> bGlobal;
