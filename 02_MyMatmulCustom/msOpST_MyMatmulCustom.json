@@ -40,25 +40,6 @@
                     ]
                 ],
                 "name": "b"
-            },
-            {
-                "format": [
-                    "ND"
-                ],
-                "type": [
-                    "float"
-                ],
-                "shape": [640],
-                "data_distribute": [
-                    "uniform"
-                ],
-                "value_range": [
-                    [
-                        0.1,
-                        1.0
-                    ]
-                ],
-                "name": "bias"
             }
         ],
         "output_desc": [

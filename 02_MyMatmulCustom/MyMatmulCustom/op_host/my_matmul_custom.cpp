@@ -31,11 +31,10 @@ static ge::graphStatus TilingFunc(gert::TilingContext *context)
     cubeTiling.SetAType(TPosition::GM, CubeFormat::ND, matmul_tiling::DataType::DT_FLOAT16);
     cubeTiling.SetBType(TPosition::GM, CubeFormat::ND, matmul_tiling::DataType::DT_FLOAT16);
     cubeTiling.SetCType(TPosition::GM, CubeFormat::ND, matmul_tiling::DataType::DT_FLOAT);
-    cubeTiling.SetBiasType(TPosition::GM, CubeFormat::ND, matmul_tiling::DataType::DT_FLOAT);
     cubeTiling.SetShape(M, N, K);
     cubeTiling.SetOrgShape(M, N, K);
     cubeTiling.SetFixSplit(baseM, baseN, -1);
-    cubeTiling.SetBias(true);
+    cubeTiling.SetBias(false);
     cubeTiling.SetBufferSpace(-1, -1, -1);
     MyMatmulCustomTilingData tiling;
     if (cubeTiling.GetTiling(tiling.cubeTilingData) == -1) { // Get matmul tiling.
@@ -75,10 +74,6 @@ public:
         this->Input("b")
             .ParamType(REQUIRED)
             .DataType({ge::DT_FLOAT16})
-            .Format({ge::FORMAT_ND});
-        this->Input("bias")
-            .ParamType(REQUIRED)
-            .DataType({ge::DT_FLOAT})
             .Format({ge::FORMAT_ND});
         this->Output("c")
             .ParamType(REQUIRED)
